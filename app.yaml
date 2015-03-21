@@ -9,10 +9,10 @@ handlers:
   static_files: favicon.ico
   upload: favicon\.ico
 
-- url: .*
+- url: .
   script: home.app
 
-- url: ./notes/*
+- url: /notes/(.*?)
   script: notes.app
 
 libraries:

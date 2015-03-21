@@ -8,9 +8,29 @@
 <h1>Welcome to My l337 Notes</h1>
 <ul>
     {% for n in notes %}
-    <li><a href="{{ n }}">{{ n }}</a></li>
+    <li><a href=notes/"{{ n.key.id }}">{{ n.title }}</a></li>
     {% endfor %}
 </ul>
-<a href="editor">Add a new note.</a>
+
+<button type="button" onclick="myFunction()">Make new note</button>
+
+<div id="newDiv">
+  <form method="POST" action="notes/new">
+      <input id="nosee" name='new2' value='1'>
+      Title:<input type="text" name="Title" value=""><br>
+      <input type="submit" value="Create new Note">
+  </form>
+</div>
+<script type="text/javascript">document.getElementById("newDiv").style.display = 'none';</script>
+
+
+
+<script>
+function myFunction() {
+    document.getElementById("newDiv").style.display = "inline";
+    document.getElementById("nosee").style.display = "none";
+}
+</script>
+
 </body>
 </html>

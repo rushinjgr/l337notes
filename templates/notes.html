@@ -5,6 +5,54 @@
     <title></title>
 </head>
 <body>
-<p>Word.</p>
+<form action="/notes/{{ key }}" method="post">
+    <input id="nosee" name='new2' value='0'>
+    <input id="nosee2" name='key' value='{{ key }}'>
+    Title: <input type="text" name="Title" id="Title" value="{{ title }}"><br>
+    <textarea rows="25" cols="100" name="content" id="cont">{{ notetext }}</textarea>
+    <br>
+    <input type="submit" value="Save">
+</form>
+<script type="text/javascript">document.getElementById("nosee").style.display = 'none';</script>
+<script type="text/javascript">document.getElementById("nosee2").style.display = 'none';</script>
+<script>
+function createXmlHttp() {
+    var xmlhttp;
+    if (window.XMLHttpRequest) {
+        xmlhttp = new XMLHttpRequest();
+    }
+    else {
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    if (!xmlhttp) {
+        alert("Your browser does not support AJAX!");
+    }
+    return xmlhttp;
+}
+    function save(){
+        var inputField = document.getElementById('cont');
+        var keyField = document.getElementById('nosee2');
+        var titleField = document.getElementById('Title');
+        if (inputField){
+            var text = inputField.value;
+            var key = keyField.value;
+            var title = titleField.value;
+            var new2 = "0";
+            var xmlHttp = createXmlHttp();
+            xmlHttp.onreadystatechange = function() {
+                if(xmlHttp.readyState == 4){
+                    if(xmlHttp.responseText != 'OK'){
+                        alert('Error: ' + xmlHttp.responseText);
+                    }
+                }
+            }
+            var paramString = 'text=' + escape(text) + '&new2=' + escape(new2) + "&key=" + escape(key) + "&autosave=true" + "&Title=" + title;
+            xmlHttp.open("POST",'/notes/{{ key }}',true);
+            xmlHttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+            xmlHttp.send(paramString);
+        }
+    }
+</script>
+<button type="button" onclick="save()">autosave</button>
 </body>
 </html>

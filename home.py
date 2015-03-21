@@ -1,10 +1,10 @@
 __author__ = 'Justin Rushin III'
 
-import sys
-import webapp2
 import os
-import glob
+
+import webapp2
 from google.appengine.ext.webapp import template
+from model.NoteObj import NoteObj
 
 def render_template(handler, template_name, template_values):
     path = os.path.join(os.path.dirname(__file__), 'templates/' + template_name)
@@ -15,9 +15,9 @@ def render_template(handler, template_name, template_values):
 class MainHandler(webapp2.RequestHandler):
 
     def get(self):
-        notes = glob.glob('notes/*.txt')
+        notes = NoteObj.all()
         template_params = {
-            'notes':notes
+            'notes':notes.order("modified")
         }
         render_template(self, 'home.html', template_params)
 
