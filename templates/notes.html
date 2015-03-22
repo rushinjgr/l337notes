@@ -5,16 +5,18 @@
     <title></title>
 </head>
 <body>
-<form action="/notes/{{ key }}" method="post">
-    <input id="nosee" name='new2' value='0'>
-    <input id="nosee2" name='key' value='{{ key }}'>
-    Title: <input type="text" name="Title" id="Title" value="{{ title }}"><br>
-    <textarea rows="25" cols="100" name="content" id="cont">{{ notetext }}</textarea>
+<form action="/notes/{{ note.key.id }}" method="post">
+    <input id="nosee" name='newn' value='0'>
+    <input id="nosee2" name='key' value='{{ note.key.id }}'>
+    <input id="nosee3" name='autosave' value=''>
+    Title: <input type="text" name="title" id="Title" value="{{ note.title }}"><br>
+    <textarea rows="25" cols="100" name="content" id="cont">{{ note.text }}</textarea>
     <br>
     <input type="submit" value="Save">
 </form>
 <script type="text/javascript">document.getElementById("nosee").style.display = 'none';</script>
 <script type="text/javascript">document.getElementById("nosee2").style.display = 'none';</script>
+<script type="text/javascript">document.getElementById("nosee3").style.display = 'none';</script>
 <script>
 function createXmlHttp() {
     var xmlhttp;
@@ -37,7 +39,7 @@ function createXmlHttp() {
             var text = inputField.value;
             var key = keyField.value;
             var title = titleField.value;
-            var new2 = "0";
+            var newn = "0";
             var xmlHttp = createXmlHttp();
             xmlHttp.onreadystatechange = function() {
                 if(xmlHttp.readyState == 4){
@@ -46,7 +48,7 @@ function createXmlHttp() {
                     }
                 }
             }
-            var paramString = 'text=' + escape(text) + '&new2=' + escape(new2) + "&key=" + escape(key) + "&autosave=true" + "&Title=" + title;
+            var paramString = 'content=' + escape(text) + '&newn=' + escape(newn) + "&key=" + escape(key) + "&autosave=true" + "&title=" + title;
             xmlHttp.open("POST",'/notes/{{ key }}',true);
             xmlHttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
             xmlHttp.send(paramString);

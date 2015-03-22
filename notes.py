@@ -3,6 +3,7 @@ import os
 
 import webapp2
 from google.appengine.ext.webapp import template
+#from dateutil.parser import parse
 
 from model.NoteObj import NoteObj
 
@@ -19,57 +20,66 @@ class MainHandler(webapp2.RequestHandler):
         newstr = key.replace("\"", "")
         n = NoteObj.get_by_id(int(newstr))
         template_params = {
-            'title':n.title,
-            'notetext':n.text,
-            'key':newstr
+            "note":n,
         }
         render_template(self, 'notes.html', template_params)
 
+
+    #post endpoint
+    #requires/accepts:
+    #           bool    autosave - 0 for manual save 1 for autosave
+    #           bool    newn     - 0 for old note 1 for new note from home page
+    #           key     key      - retrieves note from db
+    #           string  title
+    #           string  content
+    #           date    modified
     def post(self,notey):
-        text = self.request.get("text")
-        title = self.request.get("Title")
-        status = int(self.request.get("new2"))
-        if(status == 1):
-            n = NoteObj()
+
+        newn = bool(int(self.request.get("newn")))
+        title = self.request.get("title")
+        autosave = False
+        #modified = datetime()
+        n = NoteObj()
+        template_params={}
+
+        #new note from homepage
+        if newn:
+            #only title is valid note property
+            #key is invalid
             n.title = title
-            n.text=""
+            n.text = ""
             n.modified = datetime.datetime.now()
             n.put()
-            key=n.key().id()
+            key = n.key().id()
             template_params = {
-                'title':title,
-                'notetext':text,
-                'key':key
+                "note":n,
             }
-            render_template(self, 'notes.html', template_params)
+            #key is now valid
+        #manual save
         else:
+            #note props (title, content, modified are all valid)
+            #key is valid
+            key = int(self.request.get("key"))
+            n=NoteObj.get_by_id(key)
+            text = self.request.get("content")
+            n.text = text
             autosave = bool(self.request.get("autosave"))
-            if(autosave):
-                key = self.request.get("key")
-                n = NoteObj.get_by_id(int(key))
-                n.title = title
-                n.text = text
-                n.modified = datetime.datetime.now()
-                n.put()
-                template_params = {
-                    'title':n.title,
-                    'notetext':n.text,
-                    'key':key
-                }
-                self.response.write("OK")
-            else:
-                key = self.request.get("key")
-                n = NoteObj.get_by_id(int(key))
-                n.title = title
-                n.text = text
-                n.modified = datetime.datetime.now()
-                n.put()
-                template_params = {
-                    'title':n.title,
-                    'notetext':n.text,
-                    'key':key
-                }
-                render_template(self, 'notes.html', template_params)
+            n.modified = datetime.datetime.now()
+            n.put()
+            n=NoteObj.get_by_id(key)
+            template_params = {
+                "note":n,
+            }
+
+        #autosave only changes what we output
+        #if it's autosave we only write "OK"
+        #otherwise we render the template
+        if autosave:
+            self.response.write("OK")
+            print("autosave")
+            print("text = " + n.text)
+        else:
+            render_template(self, 'notes.html', template_params)
 
 
 app = webapp2.WSGIApplication([
