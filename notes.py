@@ -37,6 +37,7 @@ class MainHandler(webapp2.RequestHandler):
 
         newn = bool(int(self.request.get("newn")))
         title = self.request.get("title")
+        print(title)
         autosave = False
         #modified = datetime()
         n = NoteObj()
@@ -61,6 +62,7 @@ class MainHandler(webapp2.RequestHandler):
             #key is valid
             key = int(self.request.get("key"))
             n=NoteObj.get_by_id(key)
+            n.title = title
             text = self.request.get("content")
             n.text = text
             autosave = bool(self.request.get("autosave"))
@@ -76,8 +78,6 @@ class MainHandler(webapp2.RequestHandler):
         #otherwise we render the template
         if autosave:
             self.response.write("OK")
-            print("autosave")
-            print("text = " + n.text)
         else:
             render_template(self, 'notes.html', template_params)
 

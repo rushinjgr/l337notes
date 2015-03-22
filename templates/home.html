@@ -8,7 +8,7 @@
 <h1>Welcome to My l337 Notes</h1>
 <ul>
     {% for n in notes %}
-    <li><a href=notes/"{{ n.key.id }}">{{ n.title }}</a></li>
+    <li><a href=notes/"{{ n.key.id }}">{{ n.modified }} : {{ n.title }}</a></li>
     {% endfor %}
 </ul>
 

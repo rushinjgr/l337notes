@@ -17,7 +17,7 @@ class MainHandler(webapp2.RequestHandler):
     def get(self):
         notes = NoteObj.all()
         template_params = {
-            'notes':notes.order("modified")
+            'notes':notes.order("-modified")
         }
         render_template(self, 'home.html', template_params)
 
